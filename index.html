@@ -50,9 +50,15 @@
     <h1>Laporan QR Code</h1>
 
     <form id="reportForm">
+      <!-- Nama Tempat -->
+      <div>
+        <label for="place">Nama Tempat:</label>
+        <input type="text" id="place" readonly />
+      </div>
+
       <!-- Pilih Nama -->
       <div>
-        <label for="name">Nama:</label>
+        <label for="name">Nama Petugas:</label>
         <select id="name" required>
           <option value="">Pilih Nama</option>
           <option value="Yaya Sutisna">Yaya Sutisna</option>
@@ -84,6 +90,11 @@
   </div>
 
   <script>
+    // Ambil nama tempat dari URL
+    const params = new URLSearchParams(window.location.search);
+    const place = params.get("place");
+    document.getElementById("place").value = place || "Tidak Diketahui";
+
     // Mendapatkan lokasi GPS otomatis
     function getLocation() {
       const locationInput = document.getElementById("location");
@@ -91,50 +102,4 @@
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            locationInput.value = `${latitude}, ${longitude}`;
-          },
-          (error) => {
-            locationInput.value = "Gagal mendapatkan lokasi.";
-            alert("Error: " + error.message);
-          }
-        );
-      } else {
-        locationInput.value = "Geolokasi tidak didukung oleh browser Anda.";
-      }
-    }
-
-    // Kirim data form
-    document.getElementById("reportForm").addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      // Ambil data form
-      const name = document.getElementById("name").value;
-      const location = document.getElementById("location").value;
-      const photo = document.getElementById("photo").files[0];
-      const timestamp = new Date().toISOString();
-
-      if (!name || !location || !photo) {
-        alert("Mohon lengkapi semua data.");
-        return;
-      }
-
-      // Simpan data ke server (sementara hanya menampilkan di console)
-      console.log("Nama:", name);
-      console.log("Lokasi:", location);
-      console.log("Foto:", photo.name);
-      console.log("Waktu:", timestamp);
-
-      alert("Laporan berhasil dikirim!");
-
-      // Reset form
-      document.getElementById("reportForm").reset();
-      getLocation(); // Dapatkan ulang lokasi
-    });
-
-    // Jalankan fungsi lokasi saat halaman dimuat
-    getLocation();
-  </script>
-</body>
-</html>
+            const la
