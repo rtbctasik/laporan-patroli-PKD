@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Laporan QR Code</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    #app {
+      max-width: 400px;
+      margin: 50px auto;
+      padding: 20px;
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+    label {
+      font-weight: bold;
+    }
+    button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">
+    <h1>Laporan QR Code</h1>
+
+    <form id="reportForm">
+      <!-- Pilih Nama -->
+      <div>
+        <label for="name">Nama:</label>
+        <select id="name" required>
+          <option value="">Pilih Nama</option>
+          <option value="Yaya Sutisna">Yaya Sutisna</option>
+          <option value="Agus Setiadi">Agus Setiadi</option>
+          <option value="Budi M Timur">Budi M Timur</option>
+          <option value="Irwan Turisman">Irwan Turisman</option>
+          <option value="Iim Ibrahim">Iim Ibrahim</option>
+          <option value="Eris Risdian">Eris Risdian</option>
+          <option value="Pikri Hendrawan">Pikri Hendrawan</option>
+          <option value="Ato Heryanto">Ato Heryanto</option>
+        </select>
+      </div>
+
+      <!-- Lokasi GPS -->
+      <div>
+        <label for="location">Lokasi:</label>
+        <input type="text" id="location" readonly placeholder="Mencari lokasi..." required />
+      </div>
+
+      <!-- Upload Foto -->
+      <div>
+        <label for="photo">Upload Foto:</label>
+        <input type="file" id="photo" accept="image/*" capture="camera" required />
+      </div>
+
+      <!-- Submit -->
+      <button type="submit">Kirim</button>
+    </form>
+  </div>
+
+  <script>
+    // Mendapatkan lokasi GPS otomatis
+    function getLocation() {
+      const locationInput = document.getElementById("location");
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            locationInput.value = `${latitude}, ${longitude}`;
+          },
+          (error) => {
+            locationInput.value = "Gagal mendapatkan lokasi.";
+            alert("Error: " + error.message);
+          }
+        );
+      } else {
+        locationInput.value = "Geolokasi tidak didukung oleh browser Anda.";
+      }
+    }
+
+    // Kirim data form
+    document.getElementById("reportForm").addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      // Ambil data form
+      const name = document.getElementById("name").value;
+      const location = document.getElementById("location").value;
+      const photo = document.getElementById("photo").files[0];
+      const timestamp = new Date().toISOString();
+
+      if (!name || !location || !photo) {
+        alert("Mohon lengkapi semua data.");
+        return;
+      }
+
+      // Simpan data ke server (sementara hanya menampilkan di console)
+      console.log("Nama:", name);
+      console.log("Lokasi:", location);
+      console.log("Foto:", photo.name);
+      console.log("Waktu:", timestamp);
+
+      alert("Laporan berhasil dikirim!");
+
+      // Reset form
+      document.getElementById("reportForm").reset();
+      getLocation(); // Dapatkan ulang lokasi
+    });
+
+    // Jalankan fungsi lokasi saat halaman dimuat
+    getLocation();
+  </script>
+</body>
+</html>
